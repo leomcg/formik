@@ -1,21 +1,26 @@
 import { useFormik } from "formik";
-import { useState } from "react";
+import "./Signup.css";
+import * as Yup from "yup";
 
 const Signup = (props) => {
-  const [firstName, setFirstName] = useState("");
-
   const formik = useFormik({
     initialValues: {
       firstName: "",
       lastName: "",
       email: "",
     },
+    validationSchema: Yup.object({
+      firstName: Yup.string().max(15, "too long").required("required"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
   });
 
-  console.log(formik.values);
+  console.log(formik.errors);
 
   return (
-    <form>
+    <form onSubmit={formik.handleSubmit}>
       <div className="input-container">
         <input
           type="text"
@@ -32,8 +37,8 @@ const Signup = (props) => {
           id="lastName"
           name="lastName"
           placeholder="Last Name"
-          onChange={(e) => setFirstName(e.target.value)}
-          value={firstName}
+          onChange={formik.handleChange}
+          value={formik.values.lastName}
         />
       </div>
       <div className="input-container">
@@ -42,9 +47,12 @@ const Signup = (props) => {
           id="email"
           name="email"
           placeholder="Email"
-          onChange={(e) => setFirstName(e.target.value)}
-          value={firstName}
+          onChange={formik.handleChange}
+          value={formik.values.email}
         />
+      </div>
+      <div className="input-container">
+        <button type="submit">Submit</button>
       </div>
     </form>
   );
